@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
 import personService from './services/persons'
 import Notification from './components/Notification'
 
@@ -78,14 +77,12 @@ function App() {
       name: newName,
       number: newNumber,
       //It is string because the backend expects it as a string
-      //In a real application, you would typically use a library to generate unique IDs
       id: (persons.length + 1).toString()
     }
 
     personService
       .create(personObject)
       .then(returnedPerson =>{
-        // Assuming the server returns the created person object
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')

@@ -1,8 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors');
+//const cors = require('cors'); // Uncomment if you want to use CORS, no need for CORS in this case as the frontend is served from the same origin
 const app = express();
-app.use(cors());
+//app.use(cors());
 app.use(express.static('dist'))
 
 const persons = [
@@ -28,7 +28,6 @@ const persons = [
     }
 ]
 
-// Define a custom token for logging request body
 morgan.token('post-data', (req) => {
   if (req.method === 'POST') {
     return JSON.stringify(req.body);
@@ -36,7 +35,7 @@ morgan.token('post-data', (req) => {
   return '';
 });
 
-// Configure morgan middleware with 'tiny' format
+
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-data'));
 
 app.use(express.json());
