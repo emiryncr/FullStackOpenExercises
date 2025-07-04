@@ -1,6 +1,9 @@
+require('dotenv').config()
 const express = require('express');
 const morgan = require('morgan');
+const Person = require('./models/person')
 //const cors = require('cors'); // Uncomment if you want to use CORS, no need for CORS in this case as the frontend is served from the same origin
+//const mongoose = require('mongoose');
 const app = express();
 //app.use(cors());
 app.use(express.static('dist'))
@@ -40,24 +43,26 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 
 app.use(express.json());
 
-
 app.get('/', (request, response) => {
   response.send('<h1>Phonebook API</h1>');
 });
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons);
-})
+    Person.find({}).then(persons => {
+        res.json(persons);
+    });
+});
 
 app.get('/api/persons/:id', (req, res) => {
     const id = req.params.id;
-    const person = persons.find(p => p.id === id)
-    if(person) {
-        res.json(person);
-    }else{
-        res.status(404).send({ error: 'Person not found' });
-    }
-})
+    Person.findById(id).then(person => {
+        if(person) {
+            res.json(person);
+        } else {
+            res.status(404).send({ error: 'Person not found' });
+        }
+    });
+});
 
 app.get('/api/info', (req, res) => {
     res.send(`Phonebook has info for ${persons.length} people <br><br> ${new Date()}`);
@@ -65,31 +70,37 @@ app.get('/api/info', (req, res) => {
 
 app.delete('/api/persons/:id',(req, res) => {
     const id = req.params.id;
-    const personIndex = persons.findIndex(p => p.id === id);
-    if(personIndex !== -1) {
-        //persons.splice(personIndex, 1);
-        res.send({ message: `Person with id ${id} deleted` });
+    Person.findByIdAndRemove(id).then(() => {
         res.status(204).end();
-    } else {
-        res.status(404).send({ error: 'Person not found' });
-    }
+    });
+});
+
+app.get('/api/info', (req, res) => {
+    Person.countDocuments().then(count => {
+        res.send(`Phonebook has info for ${count} people <br><br> ${new Date()}`);
+    });
 })
 
 app.post('/api/persons', (req, res) => {
-    const newPerson = req.body;
-    if(!newPerson.name || !newPerson.number) {
-        return res.status(400).json({ error: 'Name or number is missing' });
-    }
-    if(persons.find(p => p.name === newPerson.name)) {
-        return res.status(400).json({ error: 'Name must be unique' });
-    }
-    newPerson.id = (Math.random() * 10000).toFixed(0);
-    persons.push(newPerson);
-    res.status(201).json(newPerson);
+  const body = req.body
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({ error: 'Name or number is missing' })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
+
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
+
 });
 
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
