@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVtaXJ5bmNyIiwiaWQiOiI2ODcyYWFlODQxNDU0ZDcyODk0NDc3M2IiLCJpYXQiOjE3NTIzOTkyNDF9.ATu-dMJq3MgyipsZVL-ry_yItxVWL2xSZOG44o9dPwY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI2ODczODZhZTFjMGM5YjliMzM1YzY1YzYiLCJpYXQiOjE3NTI0MDE2MDZ9._lyzFqtd1f6cG1G5sIkMF-FawqYp1hRevJ5Dwy5n_hE
 
 {
-    "title": "Token test blog",
-    "author": "Test Author",
-    "url": "http://added-url.com",
-    "likes": 1
+  "title": "Blog for Deletion Test",
+  "author": "Test User",
+  "url": "http://testblog.com",
+  "likes": 1
 }
