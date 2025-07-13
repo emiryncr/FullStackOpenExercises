@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVtaXJ5bmNyIiwiaWQiOiI2ODcyYWFlODQxNDU0ZDcyODk0NDc3M2IiLCJpYXQiOjE3NTIzOTkyNDF9.ATu-dMJq3MgyipsZVL-ry_yItxVWL2xSZOG44o9dPwY
 
 {
-    "title": "Added Blog Title",
-    "author": "Added Author",
+    "title": "Token test blog",
+    "author": "Test Author",
     "url": "http://added-url.com",
-    "likes": 1,
-    "userId": "6872aae841454d728944773b"
+    "likes": 1
 }
