@@ -7,23 +7,28 @@ const totalLikes = (blogs) => {
 }
 
 const favoriteBlog = (blogs) => {
-    return blogs.reduce((favorite, blog) => {
-        return (favorite.likes || 0) < blog.likes ? blog : favorite
-    }
-, {})
+  if (blogs.length === 0) return null
+  const fav = blogs.reduce((favorite, blog) => {
+    return favorite.likes < blog.likes ? blog : favorite
+  }, blogs[0])
+  return {
+    title: fav.title,
+    author: fav.author,
+    likes: fav.likes
+  }
 }
 
 const _ = require('lodash')
 
 const mostBlogs = (blogs) => {
-  if (blogs.length === 0) return {}
+  if (blogs.length === 0) return null
   const grouped = _.countBy(blogs, 'author')
   const author = _.maxBy(Object.keys(grouped), a => grouped[a])
   return { author, blogs: grouped[author] }
 }
 
 const mostLikes = (blogs) => {
-  if (blogs.length === 0) return {}
+  if (blogs.length === 0) return null
   const grouped = _.groupBy(blogs, 'author')
   const author = _.maxBy(Object.keys(grouped), a => _.sumBy(grouped[a], 'likes'))
   return { author, likes: _.sumBy(grouped[author], 'likes') }

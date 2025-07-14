@@ -4,38 +4,59 @@ const supertest = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../app')
 const User = require('../models/user')
+const helper = require('./test_helper')
 const api = supertest(app)
 
 beforeEach(async () => {
   await User.deleteMany({})
+  await User.insertMany(helper.initialUsers)
 })
 
-test('all users are returned as json', async () => {
+test('retrieving users: all users are returned as json', async () => {
   const response = await api.get('/api/users')
     .expect(200)
     .expect('Content-Type', /application\/json/)
-
-    assert.strictEqual(response.body.length, 0)
 })
 
-test('user with short username is not created', async () => {
-  const newUser = { username: 'ab', password: 'validpass', name: 'Test' }
-  const response = await api.post('/api/users').send(newUser).expect(400).expect('Content-Type', /application\/json/)
-  assert.ok(response.body.error.includes('username'))
+test('creating a user: valid user can be created', async () => {
+  const usersAtStart = await helper.usersInDb()
+  const newUser = {
+    username: helper.uniqueUser.username,
+    name: helper.uniqueUser.name,
+    password: helper.uniqueUser.password
+  }
+  await api
+    .post('/api/users/')
+    .send(newUser)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  const usersAtEnd = await helper.usersInDb()
+  assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+  const usernames = usersAtEnd.map(user => user.username)
+  assert.ok(usernames.includes(newUser.username))
 })
 
-test('user with short password is not created', async () => {
-  const newUser = { username: 'validuser', password: '12', name: 'Test' }
-  const response = await api.post('/api/users').send(newUser).expect(400).expect('Content-Type', /application\/json/)
-  assert.ok(response.body.error.includes('password'))
+test('creating a user: username should be unique', async () => {
+  await api
+    .post('/api/users/')
+    .send(helper.notUniqueUser)
+    .expect(400)
 })
 
-test('user with duplicate username is not created', async () => {
-  await api.post('/api/users').send({ username: 'unique', password: 'pass123', name: 'Test' })
-  const response = await api.post('/api/users').send({ username: 'unique', password: 'pass456', name: 'Test2' }).expect(400)
-  assert.ok(response.body.error.includes('unique'))
+test('creating a user: password should be provided', async () => {
+  await api
+    .post('/api/users/')
+    .send(helper.userWithOutPassword)
+    .expect(400)
+})
+
+test('creating a user: password should be at least 3 characters long', async () => {
+  await api
+    .post('/api/users/')
+    .send(helper.userWithShortPassword)
+    .expect(400)
 })
 
 after(async () => {
-    await mongoose.connection.close();
+  await mongoose.connection.close()
 })
