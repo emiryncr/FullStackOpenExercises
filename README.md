@@ -55,16 +55,20 @@ The course covers modern web development with JavaScript, React, Node.js, GraphQ
 > *Backend structure, testing, and user authentication*
 
 - [x] a. Structure of Backend Application  
-- [ ] b. Testing Backend  
-- [ ] c. User Administration  
-- [ ] d. Token Authentication  
+- [x] b. Testing Backend  
+- [x] c. User Administration  
+- [x] d. Token Authentication  
 
 ---
 
 ### 🧪 Part 5: Testing React Apps  
 > *React app testing with Jest and React Testing Library*
 
-- [ ] Coming soon...
+- [ ]  [a Login in frontend]
+- [ ]  [b props.children and proptypes]
+- [ ]  [c Testing React apps]
+- [ ]  [d End to end testing: Playwright]
+- [ ]  [e End to end testing: Cypress]
 
 ---
 
