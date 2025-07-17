@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -9,7 +10,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
-
+  const [notification, setNotification] = useState(null)
+  const [notificationType, setNotificationType] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -22,7 +24,6 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      //blogService.setToken(user.token)
     }
   }, [])
 
@@ -43,7 +44,12 @@ const App = () => {
       console.log('Login successful:', user)
     }catch (exception) {
       console.error('Login failed:', exception)
-      alert('Wrong credentials')
+      setNotification('Wrong username or password')
+      setNotificationType('error')
+      setTimeout(() => {
+        setNotification(null)
+        setNotificationType('')
+      }, 5000)
       setUsername('')
       setPassword('')
     }
@@ -90,6 +96,12 @@ const App = () => {
       setBlogs(blogs.concat(createdBlog))
       setNewBlog({ title: '', author: '', url: '' })
       console.log('Blog created:', createdBlog)
+      setNotification(`A new blog ${createdBlog.title} by ${createdBlog.author} added`)
+      setNotificationType('success')
+      setTimeout(() => {
+        setNotification(null)
+        setNotificationType('')
+      }, 5000)
     }catch (exception) {
       console.error('Failed to create blog:', exception)
     }
@@ -99,6 +111,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={notification} type={notificationType} />
         {loginForm()}
       </div>
     )
@@ -108,8 +121,7 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
 
-      {/* Notification will continue from 5.4: Blog List Frontend, step 4 */}
-
+      <Notification message={notification} type={notificationType} />
 
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>logout</button>
