@@ -25,6 +25,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -123,6 +124,26 @@ const App = () => {
   const copyBlogs = [...blogs];
   const sortedBlogs = copyBlogs.sort((a, b) => b.likes - a.likes)
 
+  const handleDeleteBlog = async (id, blog) => {
+    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      return;
+    }
+
+    try {
+      await blogService.deleteBlog(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+      console.log('Blog deleted:', id)
+      setNotification(`Blog ${blog.title} deleted`)
+      setNotificationType('success')
+      setTimeout(() => {
+        setNotification(null)
+        setNotificationType('')
+      }, 5000)
+    } catch (exception) {
+      console.error('Failed to delete blog:', exception)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -149,7 +170,12 @@ const App = () => {
       </Togglable>
 
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlog} />
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          updateBlog={handleUpdateBlog} 
+          deleteBlog={handleDeleteBlog}
+          />
       )}
 
     </div>
