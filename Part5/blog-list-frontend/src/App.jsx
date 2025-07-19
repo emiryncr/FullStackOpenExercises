@@ -105,6 +105,22 @@ const App = () => {
     }
   }
 
+  const handleUpdateBlog = async (id, updatedBlog) => {
+    try {
+      const returnedBlog = await blogService.update(id, updatedBlog)
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      console.log('Blog updated:', returnedBlog)
+      setNotification(`Blog ${returnedBlog.title} updated`)
+      setNotificationType('success')
+      setTimeout(() => {
+        setNotification(null)
+        setNotificationType('')
+      }, 5000)
+    } catch (exception) {
+      console.error('Failed to update blog:', exception)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -131,7 +147,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlog} />
       )}
 
     </div>
