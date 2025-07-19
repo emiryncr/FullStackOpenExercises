@@ -120,6 +120,8 @@ const App = () => {
       console.error('Failed to update blog:', exception)
     }
   }
+  const copyBlogs = [...blogs];
+  const sortedBlogs = copyBlogs.sort((a, b) => b.likes - a.likes)
 
   if (user === null) {
     return (
@@ -146,7 +148,7 @@ const App = () => {
         />
       </Togglable>
 
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlog} />
       )}
 
