@@ -60,26 +60,26 @@ const App = () => {
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
-        <div>
+      <div>
           username
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
+        />
+      </div>
+      <div>
           password
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
   )
 
   const handleLogout = () => {
@@ -121,12 +121,12 @@ const App = () => {
       console.error('Failed to update blog:', exception)
     }
   }
-  const copyBlogs = [...blogs];
+  const copyBlogs = [...blogs]
   const sortedBlogs = copyBlogs.sort((a, b) => b.likes - a.likes)
 
   const handleDeleteBlog = async (id, blog) => {
     if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      return;
+      return
     }
 
     try {
@@ -170,16 +170,16 @@ const App = () => {
       </Togglable>
 
       {sortedBlogs.map(blog =>
-        <Blog 
-          key={blog.id} 
-          blog={blog} 
-          updateBlog={handleUpdateBlog} 
+        <Blog
+          key={blog.id}
+          blog={blog}
+          updateBlog={handleUpdateBlog}
           deleteBlog={handleDeleteBlog}
-          />
+        />
       )}
 
     </div>
   )
 }
 
-export default App;
+export default App
