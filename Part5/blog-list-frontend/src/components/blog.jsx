@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
@@ -29,25 +30,39 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
-        {blog.title}
-        <button onClick={toggleVisibility}>{visible ? 'hide' : 'show'}</button>
-        <div style={handleVisibility}>
-          <ul>
-            <li>{blog.url}</li>
-            <li>
-              {blog.likes} likes
-              <button onClick={handleLike}>like</button>
-            </li>
-            <li>{blog.author}</li>
-          </ul>
-          <button style={{ backgroundColor: 'red', color: 'white' }} onClick={handleDelete}>delete</button>
-        </div>
+    <div style={blogStyle} className='blog'>
+      <div className="blog-summary">
+        {blog.title} {blog.author}
+        <button onClick={toggleVisibility} className="toggle-button">{visible ? 'hide' : 'show'}</button>
+        {visible && (
+          <div className="blog-details">
+            <ul>
+              <li className="blog-url">{blog.url}</li>
+              <li className="blog-likes">
+                {blog.likes} likes
+                <button onClick={handleLike} className="like-button">like</button>
+              </li>
+              <li className="blog-author">{blog.author}</li>
+            </ul>
+            <button style={{ backgroundColor: 'red', color: 'white' }} onClick={handleDelete} className="delete-button">delete</button>
+          </div>
+        )}
       </div>
 
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired
+  }).isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired
 }
 
 export default Blog
