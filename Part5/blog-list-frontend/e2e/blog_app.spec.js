@@ -74,5 +74,20 @@ test.describe('Blog app', () => {
 
       await expect(page.getByText('1 likes')).toBeVisible()
     })
+
+    test('creator can delete a blog', async ({ page }) => {
+      await page.getByRole('button', { name: 'new blog' }).click()
+      await page.getByTestId('title').fill('Blog to Delete')
+      await page.getByTestId('author').fill('Author')
+      await page.getByTestId('url').fill('http://blog.com')
+      await page.getByRole('button', { name: 'Add' }).click()
+
+      await page.getByRole('button', { name: 'show' }).click()
+
+      page.on('dialog', dialog => dialog.accept())
+      await page.getByRole('button', { name: 'delete' }).click()
+
+      await expect(page.getByText('Blog to Delete Author')).not.toBeVisible()
+    })
   })
 })
