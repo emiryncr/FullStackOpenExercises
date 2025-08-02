@@ -41,4 +41,24 @@ test.describe('Blog app', () => {
       await expect(page.getByText('Test User logged in')).not.toBeVisible()
     })
   })
+
+  test.describe('When logged in', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.getByTestId('username').fill('testuser')
+      await page.getByTestId('password').fill('testpass')
+      await page.getByRole('button', { name: 'login' }).click()
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'new blog' }).click()
+
+      await page.getByTestId('title').fill('Test Blog Title')
+      await page.getByTestId('author').fill('Test Author')
+      await page.getByTestId('url').fill('http://testblog.com')
+
+      await page.getByRole('button', { name: 'Add' }).click()
+
+      await expect(page.getByText('Test Blog Title Test Author')).toBeVisible()
+    })
+  })
 })
