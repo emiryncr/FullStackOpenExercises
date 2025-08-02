@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -29,6 +29,12 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     deleteBlog(blog.id, blog)
   }
 
+  const isOwner = user && blog.user && (
+    user.id === blog.user.id ||
+    user.id === blog.user ||
+    user.username === blog.user.username
+  )
+
   return (
     <div style={blogStyle} className='blog'>
       <div className="blog-summary">
@@ -44,7 +50,15 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
               </li>
               <li className="blog-author">{blog.author}</li>
             </ul>
-            <button style={{ backgroundColor: 'red', color: 'white' }} onClick={handleDelete} className="delete-button">delete</button>
+            {isOwner && (
+              <button
+                style={{ backgroundColor: 'red', color: 'white' }}
+                onClick={handleDelete}
+                className="delete-button"
+              >
+                delete
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -59,10 +73,23 @@ Blog.propTypes = {
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
-    likes: PropTypes.number.isRequired
+    likes: PropTypes.number.isRequired,
+    user: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({
+        id: PropTypes.string,
+        username: PropTypes.string,
+        name: PropTypes.string
+      })
+    ])
   }).isRequired,
   updateBlog: PropTypes.func.isRequired,
-  deleteBlog: PropTypes.func.isRequired
+  deleteBlog: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string,
+    name: PropTypes.string
+  })
 }
 
 export default Blog

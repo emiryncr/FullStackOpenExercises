@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Blog from './blog'
+import Blog from './Blog'
 
 test('renders title and author but not URL or likes by default', () => {
   const blog = {
