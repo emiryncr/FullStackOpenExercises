@@ -65,10 +65,10 @@ The course covers modern web development with JavaScript, React, Node.js, GraphQ
 > *React app testing with Jest and React Testing Library*
 
 - [x]  a. Login in frontend
-- [ ]  b. props.children and proptypes
-- [ ]  c. Testing React apps
-- [ ]  d. End to end testing: Playwright
-- [ ]  e. End to end testing: Cypress
+- [x]  b. props.children and proptypes
+- [x]  c. Testing React apps
+- [x]  d. End to end testing: Playwright
+- [x]  e. End to end testing: Cypress
 
 ---
 
